@@ -1,86 +1,41 @@
-let submit = document.querySelector('#submit');
 let showURL = document.querySelector('#showURL');
 let firstSpan = document.querySelector("#first");
 let secondSpan = document.querySelector("#second");
 let thirdSpan = document.querySelector("#third");
-
-//first select
+let selects_container = document.querySelector('#selects_container');
+let selected;
 let select1 = document.createElement('select');
-selects_container.appendChild(select1);
-
-fetch('src/env.txt')
-.then(response => response.text())
-.then(text => {
-    const arr = text.replace('\r', '').split('\n');
-    arr.forEach(item => {                
-        const option = document.createElement('option');
-        option.setAttribute('value', item);
-        option.innerText = item;       
-        select1.appendChild(option);                                   
-    });
-
-    let selected = select1.options[select1.selectedIndex].text; 
-    firstSpan.innerHTML = selected;
-       const choose = () => {
-        firstSpan.innerHTML = '';
-            selected = select1.options[select1.selectedIndex].text;  
-            firstSpan.innerHTML = selected;
-        }
-    select1.addEventListener('change', choose)    
-})
-
-//second select
-
 let select2 = document.createElement('select');
-selects_container.appendChild(select2);
-
-fetch('src/codebooks.txt')
-.then(response => response.text())
-.then(text => {
-    const arr = text.replace('\r', '').split('\n');
-    arr.forEach(item => {                
-        const option = document.createElement('option');
-        option.setAttribute('value', item);
-        option.innerText = item;       
-        select2.appendChild(option);                                   
-    });
-
-    let selected = select2.options[select2.selectedIndex].text; 
-    secondSpan.innerHTML = selected;
-       const choose = () => {
-        secondSpan.innerHTML = '';
-            selected = select2.options[select2.selectedIndex].text;  
-            secondSpan.innerHTML = selected;
-        }
-    select2.addEventListener('change', choose)    
-})
-
-//third select
-
 let select3 = document.createElement('select');
-selects_container.appendChild(select3);
 
+function handleSelect(select, file, span){
+ 
+    fetch(file)
+    .then(response => response.text())
+    .then(text => {
+        const arr = text.replace('\r', '').split('\n');
+        arr.forEach(item => {                
+            const option = document.createElement('option');
+            option.setAttribute('value', item);
+            option.innerText = item;       
+            select.appendChild(option);                                   
+        });
+       
+        selects_container.appendChild(select);
 
-fetch('src/systemId.txt')
-.then(response => response.text())
-.then(text => {
-    const arr = text.replace('\r', '').split('\n');
-    arr.forEach(item => {                
-        const option = document.createElement('option');
-        option.setAttribute('value', item);
-        option.innerText = item;       
-        select3.appendChild(option);                                   
-    });
+        const choose = () => {
+                selected = select.options[select.selectedIndex].text;  
+                span.innerHTML = selected;
+                showURL.href = showURL.innerText;
+            }
 
-    let selected = select3.options[select3.selectedIndex].text; 
-    thirdSpan.innerHTML = selected;
-       const choose = () => {
-        firstSpan.innerHTML = '';
-            selected = select3.options[select3.selectedIndex].text;  
-            thirdSpan.innerHTML = selected;
-        }
-    select3.addEventListener('change', choose)    
-})
+        window.addEventListener('load', choose);    
+        select.addEventListener('change', choose);    
+    })
+}
 
+handleSelect(select1, 'src/env.txt', firstSpan);
+handleSelect(select2, 'src/codebooks.txt', secondSpan);
+handleSelect(select3, 'src/systemId.txt', thirdSpan);
 
 
